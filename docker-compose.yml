@@ -1,0 +1,85 @@
+version: "3.8"
+services:
+  rabbitmq:
+    image: rabbitmq:3-alpine
+    hostname: rabbitmq
+    ports:
+      - "127.0.0.1:5672:5672"
+    networks:
+      - front
+
+  #c:
+  #  build:
+  #    context: .
+  #    dockerfile: c.Dockerfile
+
+  #cs:
+  #  build:
+  #    context: .
+  #    dockerfile: cs.Dockerfile
+
+  #erlang:
+  #  build:
+  #    context: .
+  #    dockerfile: erlang.Dockerfile
+
+  #go:
+  #  build:
+  #    context: .
+  #    dockerfile: go.Dockerfile
+
+  #haskell:
+  #  build:
+  #    context: .
+  #    dockerfile: haskell.Dockerfile
+
+  #java:
+  #  build:
+  #    context: .
+  #    dockerfile: java.Dockerfile
+#  reverse:
+#    container_name: reverse
+#    hostname: reverse
+#    image: nginx
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    volumes:
+#      - ./etc/nginx:/etc/nginx
+#    networks:
+#      - front
+
+  frontend:
+    build: ./frontend
+    environment:
+      NEXT_PUBLIC_API_URL: backend
+      NEXT_PUBLIC_BACKEND_URL: backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/frontend
+      - /frontend/node_modules/ # Excludes local node modules
+    networks:
+      - front
+
+  backend:
+    build: ./backend
+    hostname: backend
+    ports:
+      - "8080:8080"
+    networks:
+      - front
+
+  python:
+    build: ./processing
+    environment:
+      RABBITMQ_HOST: rabbitmq
+    depends_on:
+      - rabbitmq
+    restart: on-failure
+    networks:
+      - front
+
+
+networks:
+  front:
