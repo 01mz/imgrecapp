@@ -13,5 +13,5 @@ An image recognition app that allows users to upload images and see classificati
 
 ## Deployment technology
 - Docker containers
-- run `docker-compose build && docker-compose up`
+- To start the app, run `docker-compose build && docker-compose up`
 - Then head to `localhost:3000` in the browser
