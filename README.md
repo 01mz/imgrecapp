@@ -1,4 +1,4 @@
-# Image recognition web app
+# Image Recognition App
 An image recognition app that allows users to upload images and see classification results
 
 
